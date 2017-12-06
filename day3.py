@@ -1,5 +1,12 @@
 import math
 
+def spiralTest(method):
+    sp = Spiral()
+    while sp.width < 3:
+        sp.addNext(method)
+    sp.width -= 1
+    sp.display()
+
 def part_1():
     input = 277678
 
@@ -21,39 +28,36 @@ def part_1():
     print(distance)
 
 class Spiral:
+    directions = [(0,1),(-1,0),(0,-1),(1,0)]
+    
     def __init__(self):
         self.coords = {0:{0:1}}
-        self.curX = 0
-        self.curY = 0
-        self.curV = 1
+        self.x = 0
+        self.y = 0
+        self.val = 1
         self.width = 0
-        self.directions = {0:(0,1),1:(-1,0),2:(0,-1),3:(1,0)}
         self.heading = 0
 
     def addNext(self, method):
-        if self.curX + self.curY == 0 and self.curX == self.width:
+        if self.x + self.y == 0 and self.x == self.width:
             self.width += 1
-            nextX = self.width
-            nextY = self.curY
+            self.x = self.width
             self.heading = 0
             self.coords[self.width] = {}
             self.coords[-self.width] = {}
         else:
-            if abs(self.curX) == self.width and abs(self.curY) == self.width:
+            if abs(self.x) == self.width and abs(self.y) == self.width:
                 self.heading = (self.heading + 1) % 4
-
-            dx, dy = self.directions[self.heading]
-            nextX = self.curX + dx
-            nextY = self.curY + dy
-
-        self.curX, self.curY = nextX, nextY
+            dx, dy = Spiral.directions[self.heading]
+            self.x += dx
+            self.y += dy
 
         if method == 'inc':
-            self.curV += 1
+            self.val += 1
         elif method == 'surrounding':
-            self.curV = self.sumSurrounding(self.curX,self.curY)
+            self.val = self.sumSurrounding(self.x,self.y)
 
-        self.coords[self.curX][self.curY] = self.curV
+        self.coords[self.x][self.y] = self.val
 
     def sumSurrounding(self, x, y):
         sum = 0
@@ -75,12 +79,14 @@ class Spiral:
 
 def part_2():
     sp = Spiral()
-    while sp.curV < 277678:
+    while sp.val < 277678:
         sp.addNext('surrounding')
-    print(sp.curV)
+    print(sp.val)
 
-print('Part 1:')
+print('Part 1: ', end='')
 part_1()
+spiralTest('inc')
 
-print('\nPart 2:')
+print('\nPart 2: ', end='')
 part_2()
+spiralTest('surrounding')

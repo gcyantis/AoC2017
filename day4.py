@@ -1,24 +1,15 @@
 from collections import Counter
 
 def noDuplicates(phrase):
-    v = True
     words = phrase.split()
     counts = list(Counter(words))
-    if len(words) > len(counts):
-        v = False
-    return v
+    return len(words) == len(counts)
 
 def noAnagrams(phrase):
-    v = True
     words = phrase.split()
     counts = [Counter(w) for w in words]
-    for c in range(0,len(counts)-1):
-        if v:
-            for b in range(c+1,len(counts)):
-                if counts[c] == counts[b]:
-                    v = False
-                    break
-    return v
+    unique = [c for n, c in enumerate(counts) if c not in counts[n+1:]]
+    return len(words) == len(unique)
 
 def part_1():
     validPasses = 0
